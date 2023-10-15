@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="initial-scale=1,user-scalable=no,maximum-scale=1,width=device-width">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <link rel="stylesheet" href="css/leaflet.css">
+        <link rel="stylesheet" href="css/qgis2web.css"><link rel="stylesheet" href="css/fontawesome-all.min.css">
+        <style>
+        html, body, #map {
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            margin: 0;
+        }
+        </style>
+        <title></title>
+    </head>
+    <body>
+        <div id="map">
+        </div>
+        <script src="js/qgis2web_expressions.js"></script>
+        <script src="js/leaflet.js"></script>
+        <script src="js/leaflet.rotatedMarker.js"></script>
+        <script src="js/leaflet.pattern.js"></script>
+        <script src="js/leaflet-hash.js"></script>
+        <script src="js/Autolinker.min.js"></script>
+        <script src="js/rbush.min.js"></script>
+        <script src="js/labelgun.min.js"></script>
+        <script src="js/labels.js"></script>
+        <script src="data/Suitability_4.js"></script>
+        <script src="data/Changsha_5.js"></script>
+        <script>
+        var highlightLayer;
+        function highlightFeature(e) {
+            highlightLayer = e.target;
+            highlightLayer.openPopup();
+        }
+        var map = L.map('map', {
+            zoomControl:true, maxZoom:25, minZoom:1
+        })
+        var hash = new L.Hash(map);
+        map.attributionControl.setPrefix('<a href="https://github.com/tomchadwin/qgis2web" target="_blank">qgis2web</a> &middot; <a href="https://leafletjs.com" title="A JS library for interactive maps">Leaflet</a> &middot; <a href="https://qgis.org">QGIS</a>');
+        var autolinker = new Autolinker({truncate: {length: 30, location: 'smart'}});
+        var bounds_group = new L.featureGroup([]);
+        function setBounds() {
+            if (bounds_group.getLayers().length) {
+                map.fitBounds(bounds_group.getBounds());
+            }
+            map.setMaxBounds(map.getBounds());
+        }
+        map.createPane('pane__0');
+        map.getPane('pane__0').style.zIndex = 400;
+        var layer__0 = L.tileLayer('https://t1.tianditu.gov.cn/vec_w/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=vec&STYLE=default&TILEMATRIXSET=w&FORMAT=tiles&TileCol={x}&TileRow={y}&TileMatrix={z}&tk=d96811b77f1c8eddab7604f946c31a37', {
+            pane: 'pane__0',
+            opacity: 1.0,
+            attribution: '',
+            minZoom: 1,
+            maxZoom: 25,
+            minNativeZoom: 1,
+            maxNativeZoom: 18
+        });
+        layer__0;
+        map.addLayer(layer__0);
+        map.createPane('pane__1');
+        map.getPane('pane__1').style.zIndex = 401;
+        var layer__1 = L.tileLayer('https://t5.tianditu.gov.cn/cva_w/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=cva&STYLE=default&TILEMATRIXSET=w&FORMAT=tiles&TileCol={x}&TileRow={y}&TileMatrix={z}&tk=d96811b77f1c8eddab7604f946c31a37', {
+            pane: 'pane__1',
+            opacity: 1.0,
+            attribution: '',
+            minZoom: 1,
+            maxZoom: 25,
+            minNativeZoom: 1,
+            maxNativeZoom: 18
+        });
+        layer__1;
+        map.addLayer(layer__1);
+        map.createPane('pane__2');
+        map.getPane('pane__2').style.zIndex = 402;
+        var layer__2 = L.tileLayer('https://t1.tianditu.gov.cn/img_w/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=img&STYLE=default&TILEMATRIXSET=w&FORMAT=tiles&TileCol={x}&TileRow={y}&TileMatrix={z}&tk=d96811b77f1c8eddab7604f946c31a37', {
+            pane: 'pane__2',
+            opacity: 1.0,
+            attribution: '',
+            minZoom: 1,
+            maxZoom: 25,
+            minNativeZoom: 1,
+            maxNativeZoom: 18
+        });
+        layer__2;
+        map.addLayer(layer__2);
+        map.createPane('pane__3');
+        map.getPane('pane__3').style.zIndex = 403;
+        var layer__3 = L.tileLayer('https://t1.tianditu.gov.cn/cia_w/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=cia&STYLE=default&TILEMATRIXSET=w&FORMAT=tiles&TileCol={x}&TileRow={y}&TileMatrix={z}&tk=d96811b77f1c8eddab7604f946c31a37', {
+            pane: 'pane__3',
+            opacity: 1.0,
+            attribution: '',
+            minZoom: 1,
+            maxZoom: 25,
+            minNativeZoom: 1,
+            maxNativeZoom: 18
+        });
+        layer__3;
+        map.addLayer(layer__3);
+        function pop_Suitability_4(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    if (typeof layer.closePopup == 'function') {
+                        layer.closePopup();
+                    } else {
+                        layer.eachLayer(function(feature){
+                            feature.closePopup()
+                        });
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['gridcode'] !== null ? autolinker.link(feature.properties['gridcode'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_Suitability_4_0(feature) {
+            switch(String(feature.properties['gridcode'])) {
+                case '1':
+                    return {
+                pane: 'pane_Suitability_4',
+                stroke: false, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(215,25,28,1.0)',
+                interactive: true,
+            }
+                    break;
+                case '2':
+                    return {
+                pane: 'pane_Suitability_4',
+                stroke: false, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(255,127,0,1.0)',
+                interactive: true,
+            }
+                    break;
+                case '3':
+                    return {
+                pane: 'pane_Suitability_4',
+                stroke: false, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(43,255,0,1.0)',
+                interactive: true,
+            }
+                    break;
+                case '4':
+                    return {
+                pane: 'pane_Suitability_4',
+                stroke: false, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(26,150,65,1.0)',
+                interactive: true,
+            }
+                    break;
+            }
+        }
+        map.createPane('pane_Suitability_4');
+        map.getPane('pane_Suitability_4').style.zIndex = 404;
+        map.getPane('pane_Suitability_4').style['mix-blend-mode'] = 'normal';
+        var layer_Suitability_4 = new L.geoJson(json_Suitability_4, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_Suitability_4',
+            layerName: 'layer_Suitability_4',
+            pane: 'pane_Suitability_4',
+            onEachFeature: pop_Suitability_4,
+            style: style_Suitability_4_0,
+        });
+        bounds_group.addLayer(layer_Suitability_4);
+        map.addLayer(layer_Suitability_4);
+        function pop_Changsha_5(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    if (typeof layer.closePopup == 'function') {
+                        layer.closePopup();
+                    } else {
+                        layer.eachLayer(function(feature){
+                            feature.closePopup()
+                        });
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['NAME'] !== null ? autolinker.link(feature.properties['NAME'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['市'] !== null ? autolinker.link(feature.properties['市'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_Changsha_5_0() {
+            return {
+                pane: 'pane_Changsha_5',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '1,5',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fillOpacity: 0,
+                interactive: true,
+            }
+        }
+        map.createPane('pane_Changsha_5');
+        map.getPane('pane_Changsha_5').style.zIndex = 405;
+        map.getPane('pane_Changsha_5').style['mix-blend-mode'] = 'normal';
+        var layer_Changsha_5 = new L.geoJson(json_Changsha_5, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_Changsha_5',
+            layerName: 'layer_Changsha_5',
+            pane: 'pane_Changsha_5',
+            onEachFeature: pop_Changsha_5,
+            style: style_Changsha_5_0,
+        });
+        bounds_group.addLayer(layer_Changsha_5);
+        map.addLayer(layer_Changsha_5);
+            var abstract = new L.Control({'position':'topright'});
+            abstract.onAdd = function (map) {
+                this._div = L.DomUtil.create('div',
+                'leaflet-control abstract');
+                this._div.id = 'abstract'
+
+                    abstract.show();
+                    return this._div;
+                };
+                abstract.show = function () {
+                    this._div.classList.remove("abstract");
+                    this._div.classList.add("abstractUncollapsed");
+                    this._div.innerHTML = '长沙市地下空间资源可开发性适应性评价研究<br />A Bayesian network model for suitability evaluation of underground space development in urban areas: The case of Changsha, China<br />(https://doi.org/10.1016/j.jclepro.2023.138135)<br />学术研究成果，仅供参考。';
+            };
+            abstract.addTo(map);
+        var baseMaps = {};
+        L.control.layers(baseMaps,{'<img src="legend/Changsha_5.png" /> Changsha': layer_Changsha_5,'Suitability<br /><table><tr><td style="text-align: center;"><img src="legend/Suitability_4_Verylow0.png" /></td><td>Very low</td></tr><tr><td style="text-align: center;"><img src="legend/Suitability_4_Low1.png" /></td><td>Low</td></tr><tr><td style="text-align: center;"><img src="legend/Suitability_4_High2.png" /></td><td>High</td></tr><tr><td style="text-align: center;"><img src="legend/Suitability_4_Veryhigh3.png" /></td><td>Very high</td></tr></table>': layer_Suitability_4,"影像注记": layer__3,"影像底图": layer__2,"矢量注记": layer__1,"矢量底图": layer__0,},{collapsed:false}).addTo(map);
+        setBounds();
+        resetLabels([layer_Changsha_5]);
+        map.on("zoomend", function(){
+            resetLabels([layer_Changsha_5]);
+        });
+        map.on("layeradd", function(){
+            resetLabels([layer_Changsha_5]);
+        });
+        map.on("layerremove", function(){
+            resetLabels([layer_Changsha_5]);
+        });
+        </script>
+    </body>
+</html>
